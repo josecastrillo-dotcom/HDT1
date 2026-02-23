@@ -28,12 +28,23 @@ registros = [
 # --- Tu código aquí ---
 
 for nombre, zona, numero in registros:
-    # TODO: Extrae las 3 primeras letras de zona en mayúsculas
-    # TODO: Extrae la inicial del nombre (primera palabra)
-    # TODO: Extrae la inicial del apellido (última palabra)
-    # TODO: Formatea el número con zfill(4)
-    # TODO: Construye y muestra la credencial
-    pass
+    # Extrae las 3 primeras letras de zona en mayúsculas
+    zona3_letras = zona[:3].upper()
+
+    # Extrae la inicial del nombre (primera palabra)
+    partes = nombre.split()
+    inicial_nombre = partes[0][0].upper()
+
+    # Extrae la inicial del apellido (última palabra)
+    inicial_apellido = partes[-1][0].upper()
+
+    # Formatea el número con zfill(4)
+    num4 = str(numero).zfill(4)
+
+    # Construye y muestra la credencial
+    credencial = f"FD26-{zona3_letras}-{inicial_nombre}{inicial_apellido}{num4}"
+    print(credencial)
+    
 
 # Salida esperada:
 # FD26-VIP-CM0047
@@ -65,11 +76,40 @@ registros_crudos = [
 for i, registro in enumerate(registros_crudos, start=1):
     print(f"--- Registro {i} ---")
 
-    # TODO: Separa el registro en sus 3 campos usando split(",")
-    # TODO: Aplica .strip() a cada campo
-    # TODO: Procesa y valida nombre, email y edad
-    # TODO: Imprime el resultado con el formato esperado
-    pass
+    # Separa el registro en sus 3 campos usando split(",")
+    campos = registro.split(",")
+
+    # Aplica .strip() a cada campo
+    nombre_leido = campos[0].strip()
+    email_leido = campos[1].strip()
+    edad_leido = campos[2].strip()
+
+    # Procesa y valida nombre, email y edad
+    nombre = nombre_leido.title()
+    email = email_leido.lower()
+
+    if "@" in email:
+        pos_arroba = email.find("@")
+        valido_email = ("." in email[pos_arroba + 1 :])
+    else:
+        valido_email = False       
+
+    edad = int(edad_leido)
+    en_rango = 5 <= edad <= 100
+
+    # Imprime el resultado con el formato esperado
+    print(f"Nombre : {nombre}")
+    print(f"Email  : {email} | Válido: {'Sí' if valido_email else 'No'}")
+
+    if en_rango:
+        print(f"Edad   : {edad} | En rango: Sí")
+    else:
+        print(f"Edad   : {edad} | En rango: No — fuera del rango [5, 100]")
+
+    print()
+
+
+    
 
 # Salida esperada:
 # --- Registro 1 ---
@@ -121,12 +161,47 @@ palabras_negativas = ["malo", "pésimo", "terrible", "aburrido", "decepcionante"
 for i, resena in enumerate(resenas, start=1):
     print(f"--- Reseña {i} ---")
 
+    palabras = resena.split()
+
     # TODO: Cuenta las palabras
+    total_palabras = len(resena.split())
+
     # TODO: Cuenta las vocales (recorre cada carácter)
+    total_vocales = 0
+    for palabra in palabras:
+        vocales_vistas = set()
+        for caracter in palabra:
+            if caracter in vocales and caracter not in vocales_vistas:
+                total_vocales += 1  
+                vocales_vistas.add(caracter)          
+
     # TODO: Encuentra la palabra más larga
+    
+    palabra_larga = palabras[0]
+    for palabra in palabras:
+        if len(palabra) > len(palabra_larga):
+            palabra_larga = palabra
+
     # TODO: Determina el sentimiento
+    tiene_positivo = any(p in palabras_positivas for p in palabras)
+    tiene_negativo = any(p in palabras_negativas for p in palabras)
+
+    if tiene_positivo and not tiene_negativo:
+        sentimiento = "positiva"
+    elif tiene_negativo and not tiene_positivo:
+        sentimiento = "negativa"
+    elif tiene_positivo and tiene_negativo:
+        sentimiento = "mixta"
+    else:
+        sentimiento = "neutral"
+
     # TODO: Imprime los resultados con el formato esperado
-    pass
+    print(f"Palabras      : {total_palabras}")
+    print(f"Vocales       : {total_vocales}")
+    print(f'Palabra larga : "{palabra_larga.lower()}"')
+    print(f"Sentimiento   : {sentimiento}")
+    print()
+    
 
 # Salida esperada:
 # --- Reseña 1 ---
@@ -136,7 +211,8 @@ for i, resena in enumerate(resenas, start=1):
 # Sentimiento   : positiva
 #
 # --- Reseña 2 ---
-# Palabras      : 12
+# Palabras      : 12 
 # Vocales       : 22
 # Palabra larga : "decepcionante"
 # Sentimiento   : mixta
+
